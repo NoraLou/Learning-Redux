@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { addRecipe } from '../actions'
 
 class App extends Component {
 
@@ -6,28 +7,46 @@ class App extends Component {
     calendar: null
   }
 
-  // componentDidMount() {
-  //   const { store } = this.props
-  //   store.subscribe
-  // }
+  componentDidMount() {
+    const { store } = this.props
 
+    store.subscribe(()=>{
+      this.setState(()=>({
+        calendar: store.getState()
+      }))
+    })
+  }
 
-
-
+  submitFood = () => {
+    this.props.store.dispatch(addRecipe({
+      day: 'monday',
+      meal: 'breakfast',
+      recipe: {
+        label: this.input.value
+      },
+    }))
+    this.input.value = ''
+  }
 
 
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        <input
+          type='text'
+          ref={(input) => this.input = input}
+          placeholder="Monday's Breakfast"
+        />
+        <button onClick={this.submitFood}>
+          Submit
+        </button>
+        <pre>
+          Monday's Breakfast: {this.state.calender &&
+          this.state.calender.monday.breakfast}
+        </pre>
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App

@@ -15,12 +15,20 @@ class App extends Component {
   }
 }
 
-function mapStateToProps(cal) {
+function mapStateToProps(cal, food) {
   const daysOfWeek = [...Object.keys(cal)]
+
   return {
-    calendar : daysOfWeek.map((day) => {
-      return {day, 'meals': cal[day] }
-    })
+    calendar: daysOfWeek.map((day) => ({
+      day,
+      meals: Object.keys(cal[day]).reduce((meals, meal) =>{
+        meals[meal] = cal[day][meal]
+        ? food[cal[day][meal]]
+        : null
+        return meals
+       },
+      {})
+    }))
   }
 }
 
